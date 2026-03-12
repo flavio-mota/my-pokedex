@@ -5,6 +5,7 @@ import { useTheme } from '../../global/themes';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes';
+import LoginScreen from '../Login';
 
 type PokemonListItem = {
   id: number;
@@ -57,10 +58,23 @@ export default function PokemonListScreen() {
       <Image source={{ uri: item.imageUrl }} style={styles.cardImage} />
     </TouchableOpacity>
   );
+  const handleLogout = () => {
+    // Integração de autenticação será adicionada futuramente
+    console.log('Login action', { LoginScreen});
+    navigation.reset({
+      index: 0,
+      routes: [{name: "Login"}]
+    })
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>Pokédex</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Pokédex</Text>
+        <TouchableOpacity style={styles.buttomSair} onPress={handleLogout}>
+          <Text style={styles.buttomSairText}>SAIR</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={MOCK_POKEMON_LIST}
         keyExtractor={(item) => String(item.id)}

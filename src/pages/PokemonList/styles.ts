@@ -7,12 +7,19 @@ export const createStyles = (theme: Theme) =>
       flex: 1,
       backgroundColor: theme.colors.background,
     },
+    header: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 32,
+      paddingTop: 72,
+      paddingBottom: 24,
+    },
+
     headerTitle: {
       fontSize: 28,
       fontWeight: 'bold',
-      paddingHorizontal: 24,
-      paddingTop: 60,
-      paddingBottom: 16,
       color: theme.colors.text,
     },
     listContent: {
@@ -65,5 +72,26 @@ export const createStyles = (theme: Theme) =>
       width: 72,
       height: 72,
     },
+    boxBottom: {
+      width: '100%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    buttomSair: {
+      height: 35,
+      width: '20%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 25,
+      borderWidth: 1,
+      backgroundColor: theme.colors.accent,
+      borderColor: theme.colors.primaryDark,
+    },
+    buttomSairText:{
+      color: theme.colors.text,
+      fontWeight: 'bold',
+    }
+    
   });
 
