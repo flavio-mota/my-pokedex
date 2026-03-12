@@ -52,7 +52,7 @@ export default function LoginScreen() {
       </View>
       <View style={styles.boxBottom}>
       <TouchableOpacity style={styles.buttonEntrar} onPress={handleLogin}>
-          <Text style={styles.buttonEntrarText}>Entrar</Text>
+          <Text style={styles.buttonEntrarText}>Entrarr</Text>
         </TouchableOpacity>
       </View>
     </View>
