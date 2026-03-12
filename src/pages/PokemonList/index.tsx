@@ -37,7 +37,16 @@ const MOCK_POKEMON_LIST: PokemonListItem[] = [
 export default function PokemonListScreen() {
   const theme = useTheme();
   const styles = createStyles(theme);
-   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'PokemonList'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'PokemonList'>>();
+
+  const handleLogout = () => {
+    // Integração de autenticação será adicionada futuramente
+    console.log('Logout action', {});
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
+  };
 
   const renderItem = ({ item }: { item: PokemonListItem }) => (
     <TouchableOpacity 
@@ -61,7 +70,12 @@ export default function PokemonListScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>Pokédex</Text>
+      <View style={styles.boxBottom}>
+        <Text style={styles.headerTitle}>Pokédex</Text>
+          <TouchableOpacity style={styles.buttonSair} onPress={() => handleLogout()}>
+            <Text style={styles.buttonSairText}>Sair</Text>
+          </TouchableOpacity>
+        </View>
       <FlatList
         data={MOCK_POKEMON_LIST}
         keyExtractor={(item) => String(item.id)}

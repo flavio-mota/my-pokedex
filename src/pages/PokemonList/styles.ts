@@ -10,9 +10,6 @@ export const createStyles = (theme: Theme) =>
     headerTitle: {
       fontSize: 28,
       fontWeight: 'bold',
-      paddingHorizontal: 24,
-      paddingTop: 60,
-      paddingBottom: 16,
       color: theme.colors.text,
     },
     listContent: {
@@ -64,6 +61,27 @@ export const createStyles = (theme: Theme) =>
     cardImage: {
       width: 72,
       height: 72,
+    },
+    buttonSair: {
+      width: 100,
+      height: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.colors.primary,
+      borderRadius: 40,
+    },
+    buttonSairText: {
+      color: theme.colors.surface,
+      fontWeight: 'bold',
+    },
+    boxBottom: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 24,
+      paddingTop: 60,
+      paddingBottom: 16,
     },
   });
 
