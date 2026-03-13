@@ -10,6 +10,11 @@ export type RootStackParamList = {
   PokemonDetail: { pokemonId: number };
 };
 
+export type RootStackParamList = {
+    Login: undefined;
+    PokemonList: undefined;
+}
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
@@ -23,4 +28,10 @@ export default function AppNavigator() {
         <Stack.Screen name="PokemonDetail" component={PokemonDetailScreen} />
     </Stack.Navigator>
   );
+    return (
+        <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen name="Login" component={LoginScreen}/>
+            <Stack.Screen name="PokemonList" component={PokemonListScreen}/>
+        </Stack.Navigator>
+    )
 }
