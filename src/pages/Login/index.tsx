@@ -12,12 +12,15 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const theme = useTheme();
   const styles = createStyles(theme);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Login' >>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Login'>>();
 
   const handleLogin = () => {
     // Integração de autenticação será adicionada futuramente
     console.log('Login action', { email, password });
-    navigation.navigate('PokemonList');
+    navigation.reset({
+      index: 0,
+      routes: [{name: "PokemonList"}],
+    })
   };
 
   return (
