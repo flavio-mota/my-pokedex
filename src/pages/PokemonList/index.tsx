@@ -48,7 +48,7 @@ export default function PokemonListScreen() {
     setError(null);
 
     const timer = setTimeout(() => {
-      const shouldFail = Math.random() < 0.5; // 20% de chance de falha
+      const shouldFail = Math.random() < 0.1; // 20% de chance de falha
       try {
         if (shouldFail) {
           setError('Falha ao carregar lista de pokémons. Tente novamente.');
