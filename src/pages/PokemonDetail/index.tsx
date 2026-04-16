@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { createStyles } from './styles';
 import { useTheme } from '../../global/themes';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../routes';
 import {
@@ -14,6 +14,8 @@ import {
 } from '../../services/pokeapi';
 import { isFavorite, toggleFavorite } from '../../services/favoritesStorage';
 import { saveLastViewedPokemon } from '../../services/ultimoVisto';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 
 const TYPE_COLORS: Record<string, string> = {
  normal: '#A8A77A',
@@ -37,13 +39,21 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default function PokemonDetailScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'PokemonDetail'>>();
+
+function handleOpenCamera() {
+  navigation.navigate('PokemonCamera', { id });
+}
+
  const theme = useTheme();
  const styles = createStyles(theme);
  const route = useRoute<RouteProp<RootStackParamList, 'PokemonDetail'>>();
- const { id } = route.params;
+ const { id, photoUri: routePhotoUri, base64: routeBase64 } = route.params;
 
  const [pokemon, setPokemon] = useState<PokemonDetailResponse | null>(null);
  const [description, setDescription] = useState<string | null>(null);
+ const [photoUri, setPhotoUri] = useState<string | null>(null);
+ const [base64, setBase64] = useState<string | null>(null);
  const [isLoading, setIsLoading] = useState(true);
  const [error, setError] = useState<string | null>(null);
  const [favorite, setFavorite] = useState(false);
@@ -99,6 +109,10 @@ export default function PokemonDetailScreen() {
  }
 
  useEffect(() => {
+   setPhotoUri(routePhotoUri ?? null);
+   setBase64(routeBase64 ?? null);
+   console.log('PokemonDetail useEffect: routePhotoUri =', routePhotoUri, 'base64 =', !!routeBase64);
+
    const controller = new AbortController();
 
    async function loadPokemon() {
@@ -138,7 +152,7 @@ export default function PokemonDetailScreen() {
    return () => {
      controller.abort();
    };
- }, [id]);
+ }, [id, routePhotoUri]);
 
  if (isLoading) {
    return (
@@ -181,9 +195,11 @@ export default function PokemonDetailScreen() {
        {pokemon.sprites.front_default ? (
          <Image source={{ uri: pokemon.sprites.front_default }} style={styles.image} />
        ) : null}
+
+      
      </View>
 
-     <TouchableOpacity
+    <TouchableOpacity
        onPress={handleToggleFavorite}
        disabled={favoriteLoading}
        style={{
@@ -200,7 +216,29 @@ export default function PokemonDetailScreen() {
        </Text>
      </TouchableOpacity>
 
-     <View style={styles.section}>
+
+    <TouchableOpacity
+      onPress={handleOpenCamera}
+      style={{
+        backgroundColor: '#16a34a',
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 999,
+        alignSelf: 'flex-start',
+        marginBottom: 16,
+      }}
+    >
+      <Text style={{ fontWeight: '700', color: '#fff' }}>Abrir câmera</Text>
+    </TouchableOpacity>
+
+    {photoUri ? (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Foto capturada</Text>
+        <Image source={{ uri: photoUri }} style={[styles.image, { width: 220, height: 220 }]} />
+      </View>
+    ) : null}
+
+    <View style={styles.section}>
        <Text style={styles.sectionTitle}>Sobre</Text>
        <Text style={styles.sectionText}>{description ?? 'Descricao nao disponivel.'}</Text>
      </View>
