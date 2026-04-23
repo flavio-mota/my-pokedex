@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { CameraView, type CameraCapturedPicture, useCameraPermissions } from 'expo-camera';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CommonActions, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes';
 import { createStyles } from './styles';
 import { useTheme } from '../../global/themes';
+
 
 
 export default function PokemonCameraScreen() {
@@ -38,19 +39,32 @@ export default function PokemonCameraScreen() {
     );
   }
 
-  async function handleTakePhoto() {
+ async function handleTakePhoto() {
     const photo = await cameraRef.current?.takePictureAsync({
       quality: 0.7,
       skipProcessing: true,
-      base64: true, // para funcionar no web
-      // exif: true,   // descomente se quiser ver metadata
+      base64: true, 
     });
 
-    if (photo) {
+     if (photo) {
       console.log('PHOTO_RESULT (pokemon id = ' + id + '):', photo);
 
-      // Volta automaticamente para detalhe com a foto
-      navigation.replace('PokemonDetail', { id, photoUri: photo.uri, base64: photo.base64 });
+      const state = navigation.getState();
+      const previousRoutes = state.routes.slice(0, -2);
+
+      navigation.dispatch(
+        CommonActions.reset({
+          ...state,
+          routes: [
+            ...previousRoutes,
+            {
+              name: 'PokemonDetail',
+              params: { id, photoUri: photo.uri, base64: photo.base64 },
+            },
+          ],
+          index: previousRoutes.length,
+        }),
+      );
     }
   }
 
