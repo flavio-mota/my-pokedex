@@ -6,6 +6,7 @@ import { useTheme } from '../../global/themes';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes';
+import { validateLogin } from '../../services/authSqlite';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -14,19 +15,32 @@ export default function LoginScreen() {
   const styles = createStyles(theme);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Login' >> ();
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = () => {
     setIsLoading(true);
-    
-    setTimeout(() => {
-    console.log('Login action', { email, password });
-    navigation.reset({
-      index: 0,
-      routes: [{name: "PokemonList"}]
-    })
-    setIsLoading(false);
-  }, 1500);
-};
+    setErrorMessage('');
+
+    try{
+      const isValid = validateLogin(email.trim().toLocaleLowerCase(), password.trim());
+      if(!isValid){
+        setErrorMessage('E-mail ou senha inválidos');
+        setIsLoading(false);
+        setPassword('');
+        return;
+      }
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'PokemonList' }],
+      });
+    }
+    catch(error){
+      setErrorMessage('Ocorreu um erro ao consultar o banco de dados');
+    } finally{
+      setIsLoading(false);
+    }
+  };
 
   const isButtonDisabled= isLoading || !email || !password;
 
@@ -72,6 +86,7 @@ export default function LoginScreen() {
           
           }
         </TouchableOpacity>
+        {errorMessage ? <Text style={{color: 'red', marginTop: 8}}>{errorMessage}</Text> : null}
       </View>
     </View>
   );
