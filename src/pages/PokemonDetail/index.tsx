@@ -15,6 +15,7 @@ import {
 import { isFavorite, toggleFavorite } from '../../services/favoritesStorage';
 import { saveLastViewedPokemon } from '../../services/ultimoVisto';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { notifyPokemonFavorited, scheduleQuickReminder } from '../../services/localNotifications';
 
 
 const TYPE_COLORS: Record<string, string> = {
@@ -108,6 +109,14 @@ async function handleSharePokemon() {
     }
   }
 
+ async function handleScheduleQuickReminder() {
+   try {
+     await scheduleQuickReminder();
+   } catch (error) {
+     console.warn('Erro ao agendar notificacao:', error);
+   }
+ }
+
  async function handleToggleFavorite() {
    if (!pokemon) return;
 
@@ -121,8 +130,15 @@ async function handleSharePokemon() {
    };
 
    const updated = await toggleFavorite(summary);
+   const isNowFavorite = updated.some((item) => item.id === pokemon.id);  
    setFavorite(updated.some((item) => item.id === pokemon.id));
+
+   if (isNowFavorite) {
+      await notifyPokemonFavorited(pokemon.name);
  }
+}
+
+ 
 
  async function persistLastViewed(detail: PokemonDetailResponse) {
    await saveLastViewedPokemon({
@@ -226,6 +242,20 @@ async function handleSharePokemon() {
      </View>
 
      <TouchableOpacity
+        onPress={handleScheduleQuickReminder}
+        style={{
+          backgroundColor: '#7c3aed',
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          borderRadius: 999,
+          alignSelf: 'flex-start',
+          marginBottom: 16,
+        }}
+      >
+        <Text style={{ fontWeight: '700', color: '#fff' }}>teste</Text>
+      </TouchableOpacity>
+
+     <TouchableOpacity
         onPress={handleSharePokemon}
         style={{
           backgroundColor: '#2563eb',
@@ -306,4 +336,4 @@ async function handleSharePokemon() {
      </View>
    </ScrollView>
  );
-}
+ }
